@@ -1,11 +1,50 @@
+/**
+ * Matrix class capability (SUMMARY):
+ * 		-Stores Original matrix
+ * 		-Stores Solution matrix
+ * 		-Fill() method to populate original matrix
+ * 		-toString() Overloaded toString method to print Original matrix
+ * 		-solution() method returns a string with a solved matrix; must run bruteSolve() or pivotSolve() prior
+ * 		-bruteSolve() method solves the Original matrix via brute force; stores solved matrix in Solution matrix
+ * 		-pivotSolve() method solves the Original matrix via partial pivot; stores solved matrix in Solution matrix
+ * 		-swap() method checks column values to stage them for swapping via swapRows() method
+ * 		-swapRows() methods swaps the two rows passed to it
+ * 		-rowOp() method tries to resolve rows around the passed row to 0
+ * 		-factorRow() method factors a row by the given column in that row
+ * 		-deepCopyMatrix() returns a value rather than reference of a given 2D array
+ * 		-backSub() returns a string with resolved values for x(n) if possible
+ * 
+ *
+ * @author	Hamza Syed
+*/
+
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Matrix {
 
+	/**
+	 * Global Variables:
+	 * 		-"row" stores the number of rows in the matrix instance
+	 * 		-"col" stores the number of columns in the matrix instance
+	 * 		-"orignal" stores the originally filled matrix via fill()
+	 * 		-"solution" stores the solved matrix. Is refreshed whenever bruteSolve() and pivotSolve() are run
+	 */
 	private int row,col;
 	private double[][] orignal,solution;
 	
+	/**
+	 * Purpose:
+	 * 		-Sole constructor of the matrix class which defines the bounds for our 2d matrix
+	 * Input:
+	 * 		-takes in "row" int to define amount of rows as argument
+	 * 		-takes in "col" int to define amount of columns as argument
+	 * Output:
+	 * 		-No return
+	 * 		-Sets the default values for "row", "col", "orignal", and "solution"
+	 * @param row
+	 * @param col
+	 */
 	public Matrix(int row, int col)
 	{
 		this.row = row;
@@ -14,6 +53,16 @@ public class Matrix {
 		this.solution = new double[row][col];
 	}
 
+	/**
+	 * Purpose:
+	 * 		-Allows for the user to fill the Orignal matrix
+	 * Input:
+	 * 		-Does not take arguments
+	 *  	-Prompts the user for values at given (row,col) to be filled with
+	 *  Output:
+	 *  	-No return
+	 *  	-Sets the Orignal matrix with user specified values
+	 */
 	public void fill()
 	{
 		Scanner scan = new Scanner(System.in);
@@ -29,6 +78,15 @@ public class Matrix {
 		}
 	}
 	
+	/**
+	 * Purpose:
+	 * 		-Overload the toString() method to print the Orignal matrix
+	 * Input:
+	 * 		-No Arguments
+	 * 		-No User Input
+	 * Output:
+	 * 		-returns a formated matrix of the Orignal matrix
+	 */
 	public String toString()
 	{
 		String matrix = "";
@@ -45,7 +103,19 @@ public class Matrix {
 			}
 		}
 		return matrix;
-	}	
+	}
+	
+	/**
+	 * Purpose:
+	 * 		-Returns the Solution matrix as string. Should only be ran after either bruteSolve()
+	 * 		or pivotSolve() have been executed. Otherwise it will return a blank matrix.
+	 * Input:
+	 * 		-No Arguments
+	 * 		-No Inputs
+	 * Output:
+	 * 		-Returns Solution matrix as formated matrix string
+	 * @return
+	 */
 	public String solution()
 	{
 		String matrix = "";
@@ -66,6 +136,17 @@ public class Matrix {
 		return matrix;
 	}
 
+	/**
+	 * Purpose:
+	 * 		-Solves the matrix via raw computations. No pivots. Uses the Orignal matrix, and copies
+	 * 		it to Solution matrix as to keep the orignal values for comparison.
+	 * Input:
+	 * 		-No arguments
+	 * 		-No User Input
+	 * Output:
+	 * 		-No return
+	 * 		-Updates Solution matrix with rref(Orignal)
+	 */
 	public void bruteSolve()
 	{
 		solution = deepCopyMatrix(orignal);
@@ -82,7 +163,18 @@ public class Matrix {
 			}
 		}
 	}
-	
+
+	/**
+	 * Purpose:
+	 * 		-Solves the matrix via partial pivots. Uses the Orignal matrix, and copies
+	 * 		it to Solution matrix as to keep the orignal values for comparison.
+	 * Input:
+	 * 		-No arguments
+	 * 		-No User Input
+	 * Output:
+	 * 		-No return
+	 * 		-Updates Solution matrix with rref(Orignal)
+	 */
 	public void pivotSolve()
 	{
 		solution = deepCopyMatrix(orignal);
@@ -101,6 +193,19 @@ public class Matrix {
 		}
 	}
 
+	/**
+	 * Purpose:
+	 * 		-Goes through all the rows to see what needs to be swapped based on the given
+	 * 		parameters. Utilizes swapRow() to do actual row swapping.
+	 * Input:
+	 * 		-int rr 
+	 * 			-sets a ceiling on what can and can't be swapped
+	 * 		-int cc
+	 * 			-defines the column which will be used for the magnitude comparison
+	 * Output:
+	 * 		-No return
+	 * 		-Prints to console the row swap operation
+	 */
 	private void swap(int rr, int cc)
 	{
 		for(int i=rr; i<row-1; i++)
@@ -116,7 +221,18 @@ public class Matrix {
 		}
 		
 	}
-	
+
+	/**
+	 * Purpose:
+	 * 		-Helper method for swap(), swaps the rows defined in the arguments.
+	 * Input:
+	 * 		-int rOne
+	 * 		-int rTwo
+	 * 		-Naming schema is irrelevant and does not correlate to the actual matrix
+	 * Output:
+	 * 		-No return
+	 * 		-Updates Solution matrix with swapped rows.
+	 */
 	private void swapRows(int rOne, int rTwo)
 	{
 		for(int c=0; c<col; c++)
@@ -127,6 +243,17 @@ public class Matrix {
 		}
 	}
 
+	/**
+	 * Purpose:
+	 * 		-Does row operations on all the rows around the row passed to rowOp().
+	 * 		-Goal is to reduce any values above and below a 1 in our passed row to 0
+	 * Input:
+	 * 		-int rr
+	 * 			-Defines the row all the operations will be done around column by column
+	 * Output:
+	 * 		-No return
+	 * 		-Updates Solution matrix with new values based on row operation
+	 */
 	private void rowOp(int rr)
 	{
 		for(int rows=0; rows<row; rows++)
@@ -143,13 +270,24 @@ public class Matrix {
 						solution[rows][cols]=0;
 					System.out.println(this.solution());
 				}
-				
-				System.out.println("Single Row Op done");
 			}	
 		}
-		System.out.println("Row Op Done");
 	}
 
+	/**
+	 * Purpose:
+	 * 		-Factors the given value defined by the input parameters to 1 while factoring
+	 * 		the whole row by the value that helped achieve the 1
+	 * Input:
+	 * 		-int rr
+	 * 			-Defines which row to target
+	 * 		-int cc
+	 * 			-Defines which column to target
+	 * 		-The targeted row is divided by the value given by the crossed value given by rr and cc
+	 * Output:
+	 * 		-No return
+	 * 		-Updates Solution matrix with factored row
+	 */
 	private void factorRow(int rr, int cc)
 	{
 		double factor = solution[rr][cc];
@@ -159,7 +297,17 @@ public class Matrix {
 				solution[rr][c] = solution[rr][c]/factor;
 			}
 	}
-	
+
+	/**
+	 * Purpose:
+	 * 		-Copy 2d array by value and not by reference. This is useful to move values from Orignal to Solution
+	 * 		before computations as to preserve the orginal user given values.
+	 * Input:
+	 * 		-double[][] input
+	 * 			-Input array to be copied
+	 * Output:
+	 * 		-return 2d array with values of input array
+	 */
 	private static double[][] deepCopyMatrix(double[][] input) {
 	    if (input == null)
 	        return null;
@@ -169,7 +317,17 @@ public class Matrix {
 	    }
 	    return result;
 	}
-	
+
+	/**
+	 * Purpose:
+	 * 		-Solves for the x values based on the Solution matrix.
+	 * 		-This should not be ran before bruteSolve() or pivotSolve()
+	 * Input:
+	 * 		-No arguments
+	 * 		-No User Input
+	 * Output:
+	 * 		-Returns a string with all x values computed for. Returns equations in case of free variables.
+	 */
 	public String backSub()
 	{
 		String bSub = "Back Substituted Values: \n";
