@@ -14,7 +14,7 @@ public class MatrixSolver {
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		//Sets System.out to print to specified file. Did this because ouput was too long for proper snapshot
-		System.setOut(new PrintStream(new FileOutputStream("outputOne.txt")));
+		System.setOut(new PrintStream(new FileOutputStream("outputThree.txt")));
 		
 		//The following line constructs a matrix of 3x4 size.
 		Matrix matrix = new Matrix(3,4);
@@ -24,7 +24,7 @@ public class MatrixSolver {
 		
 		//Solves the matrix using purely computational power without any fancy techniques.
 		matrix.bruteSolve();
-		System.out.println("\nBRUTE FORCED SOLUTION:\n"+matrix.solution()+"\n\n========================\n\n");
+		System.out.println("\nBRUTE FORCED SOLUTION:\n"+matrix.solution()+"\n\n"+matrix.backSub()+"\n\n========================\n\n");
 		
 		//Solves the matrix using partial pivots.
 		matrix.pivotSolve();

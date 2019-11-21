@@ -73,7 +73,7 @@ public class Matrix {
 			{
 				System.out.print("Please enter value at ("+(r+1)+","+(c+1)+"): ");
 				orignal[r][c] = scan.nextDouble();
-				System.out.println(toString());
+				System.out.println("\n"+toString());
 			}
 		}
 	}
